@@ -115,6 +115,32 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
                         };
 
                         NSDictionary* whatToReturn = opts[@"return"] ?: [[NSDictionary alloc] init];
+                    
+                        if (whatToReturn[@"textResult"]) {
+                            NSDictionary *textFields = [[NSMutableDictionary alloc] init];
+                            for (RGLDocumentReaderTextField *textField in result.textResult.fields) {
+                                NSString *value = [result getTextFieldValueByType:textField.fieldType lcid:textField.lcid];
+                                NSLog(@"fieldName: %@, value: %@", textField.fieldName, value);
+                                [textFields setValue:value forKey:textField.fieldName];
+                            }
+                            
+                            [totalResults setObject:textFields forKey:@"textResult"];
+                        }
+
+                        if (whatToReturn[@"documentType"]) {
+                            NSMutableArray *results = [NSMutableArray array];
+                            for (RGLDocumentReaderDocumentType *docType in result.documentType) {
+                                [results addObject:@{
+                                    @"name": docType.name,
+//                                    @"dType": docType.dType,
+                                    @"dMRZ": docType.dMRZ ? @YES : @NO,
+                                    @"dYear": docType.dYear,
+                                }];
+                            }
+
+                            [totalResults setObject:results forKey:@"documentType"];
+                        }
+                        
                         if (whatToReturn[@"barcodeResult"]) {
                             NSMutableArray *results = [NSMutableArray array];
                             for (RGLDocumentReaderBarcodeField *field in result.barcodeResult.fields) {
@@ -267,7 +293,8 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
     return @{
         @"width": [NSNumber numberWithDouble:widthInPixels],
         @"height": [NSNumber numberWithDouble:heightInPixels],
-        @"dataUri": [@"data:image/jpeg;base64," stringByAppendingString:base64]
+        @"base64": base64,
+        @"extension": @".jpeg"
     };
 }
 
