@@ -1,6 +1,8 @@
 
 # react-native-regula-document-reader
 
+Fork of https://github.com/tradle/react-native-regula-document-reader
+
 ## Getting started
 
 `npm install react-native-regula-document-reader --save`
