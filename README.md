@@ -5,11 +5,11 @@ Fork of https://github.com/tradle/react-native-regula-document-reader
 
 ## Getting started
 
-`npm install react-native-regula-document-reader --save`
+`npm install @exodus/react-native-regula-document-reader --save`
 
 ### Mostly automatic installation
 
-`react-native link react-native-regula-document-reader`
+`react-native link @exodus/react-native-regula-document-reader`
 
 #### iOS
 
@@ -41,11 +41,11 @@ allprojects {
 1. Open AndroidManifest.xml file and set: `android:allowBackup="true"`
 1. `mkdir -p android/app/src/main/res/raw/`
 1. Copy `regula.license` to that folder
-1. This project comes bundled with a db.dat, but if you want to use the latest, download it from Regula and copy it to `node_modules/react-native-regula-document-reader/android/src/main/assets/Regula/`
+1. This project comes bundled with a db.dat, but if you want to use the latest, download it from Regula and copy it to `node_modules/@exodus/react-native-regula-document-reader/android/src/main/assets/Regula/`
 
 ## Usage
 ```js
-import RegulaDocumentReader, { Scenario } from 'react-native-regula-document-reader';
+import RegulaDocumentReader, { Scenario } from '@exodus/react-native-regula-document-reader';
 
 // do this early on to save some time
 await RegulaDocumentReader.initialize({
@@ -56,23 +56,46 @@ await RegulaDocumentReader.initialize({
 // set options as you like
 // see Regula docs for what they mean
 await RegulaDocumentReader.scan({
+  return: {
+    base64Images: true,
+    jsonResult: true,
+    barcodeResult: true,
+  },
+  // see RGLFunctionality
   functionality: {
     showTorchButton: true,
     showCloseButton: true,
-    showCaptureButton: true,
-    showCaptureButtonAfterDelay: true,
-    showSkipNextPageButton: true,
-    videoCaptureMotionControl: true,
-    showChangeFrameButton: true,
+    showCaptureButton: false,
+    showChangeFrameButton: false,
+    showCameraSwitchButton: false,
+    showSkipNextPageButton: false,
+    skipFocusingFrames: false,
+    videoCaptureMotionControl: false,
+    // orientation: '..todo..',
+    // onlineMode: true,
+    singleResult: true,
+    useAuthenticator: false,
+    rfidEnabled: false,
+    showCaptureButtonDelayFromDetect: 10,
+    showCaptureButtonDelayFromStart: 10,
+    // cameraPosition
   },
+  // see RGLCustomization
+  // there are all kinds of colors that can theoretically be set
   customization: {
-    showHintMessages: true,
-    showHelpAnimation: true,
+    showStatusMessages: true,
+    showResultStatusMessages: true,
+    showNextPageAnimation: true,
+    showBackgroundMask: true,
+    // default is 'Searching for document...'
+    status: '',
   },
+  // see RGLProcessParams
   processParams: {
-    scenario: Scenario.mrz,
-    multipageProcessing: false,
-    dateFormat: 'dd-mm-yyyy',
+    scenario: Regula.Scenario.fullProcess,
+    dateFormat: 'yyyy-mm-dd',
+    multipageProcessing: true,
+    logs: true,
   },
 })
 ```
