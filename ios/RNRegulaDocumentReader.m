@@ -115,7 +115,7 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
                         };
 
                         NSDictionary* whatToReturn = opts[@"return"] ?: [[NSDictionary alloc] init];
-                    
+
                         if (whatToReturn[@"textResult"]) {
                             NSDictionary *textFields = [[NSMutableDictionary alloc] init];
                             for (RGLDocumentReaderTextField *textField in result.textResult.fields) {
@@ -123,7 +123,7 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
                                 NSLog(@"fieldName: %@, value: %@", textField.fieldName, value);
                                 [textFields setValue:value forKey:textField.fieldName];
                             }
-                            
+
                             [totalResults setObject:textFields forKey:@"textResult"];
                         }
 
@@ -140,7 +140,7 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
 
                             [totalResults setObject:results forKey:@"documentType"];
                         }
-                        
+
                         if (whatToReturn[@"barcodeResult"]) {
                             NSMutableArray *results = [NSMutableArray array];
                             for (RGLDocumentReaderBarcodeField *field in result.barcodeResult.fields) {
