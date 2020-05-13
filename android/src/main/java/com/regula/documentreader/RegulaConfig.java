@@ -64,7 +64,7 @@ public class RegulaConfig {
       customization.cameraFrameActiveColor = opts.getString("cameraFrameActiveColor");
     }
 
-    if (opts.hasKey("cameraFrameShapeType") && opts.getString("cameraFrameShapeType") === "corners") {
+    if (opts.hasKey("cameraFrameShapeType") && opts.getString("cameraFrameShapeType").equals("corners")) {
       customization.cameraFrameShapeType = FrameShapeType.CORNER;
     }
   }
