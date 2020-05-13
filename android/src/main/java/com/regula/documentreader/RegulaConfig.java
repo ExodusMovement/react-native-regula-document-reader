@@ -63,6 +63,10 @@ public class RegulaConfig {
     if (opts.hasKey("cameraFrameActiveColor")) {
       customization.cameraFrameActiveColor = opts.getString("cameraFrameActiveColor");
     }
+
+    if (opts.hasKey("cameraFrameShapeType") && opts.getString("cameraFrameShapeType") === "corners") {
+      customization.cameraFrameShapeType = FrameShapeType.CORNER;
+    }
   }
 
   public static void setProcessParams(ProcessParam processParams, ReadableMap opts) {

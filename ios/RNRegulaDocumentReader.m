@@ -91,6 +91,8 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
         [RGLDocReader.shared.processParams setValuesForKeysWithDictionary:opts[@"processParams"]];
         [RGLDocReader.shared.customization setValuesForKeysWithDictionary:opts[@"customization"]];
         [RGLDocReader.shared.functionality setValuesForKeysWithDictionary:opts[@"functionality"]];
+        if ([opts[@"customization"][@"cameraFrameShapeType"] isEqualToString:@"corners"])
+            [RGLDocReader shared].customization.cameraFrameShapeType = RGLCameraFrameShapeTypeCorners;
 
         [RGLDocReader.shared showScanner:currentViewController completion:^(enum RGLDocReaderAction action, RGLDocumentReaderResults * _Nullable result, NSString * _Nullable error) {
             NSLog(@"DocumentReaderAction %ld", (long)action);
