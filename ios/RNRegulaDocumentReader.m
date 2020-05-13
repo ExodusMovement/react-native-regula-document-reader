@@ -106,12 +106,6 @@ RCT_EXPORT_METHOD(prepareDatabase:(NSDictionary*) options callback:(RCTResponseS
 //    }];
 //}
 
-#define UIColorFromHEX(hex) \
-[UIColor colorWithRed:((float)((hex & 0xFF0000) >> 16))/255.0 \
-                green:((float)((hex & 0x00FF00) >>  8))/255.0 \
-                 blue:((float)((hex & 0x0000FF) >>  0))/255.0 \
-                alpha:1.0]
-
 RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
 {
     __block RCTResponseSenderBlock callback = cb;
