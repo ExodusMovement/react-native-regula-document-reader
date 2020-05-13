@@ -2,6 +2,40 @@
 #import "RNRegulaDocumentReader.h"
 @import DocumentReader;
 
+@interface UIColor (fromHex)
++ (UIColor *)colorwithHexString:(NSString *)hexStr alpha:(CGFloat)alpha;
+@end
+
+@implementation UIColor (fromHex)
+
++ (UIColor *)colorwithHexString:(NSString *)hexStr alpha:(CGFloat)alpha;
+{
+  //-----------------------------------------
+  // Convert hex string to an integer
+  //-----------------------------------------
+  unsigned int hexint = 0;
+
+  // Create scanner
+  NSScanner *scanner = [NSScanner scannerWithString:hexStr];
+
+  // Tell scanner to skip the # character
+  [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@"#"]];
+  [scanner scanHexInt:&hexint];
+
+  //-----------------------------------------
+  // Create color object, specifying alpha
+  //-----------------------------------------
+  UIColor *color =
+    [UIColor colorWithRed:((CGFloat) ((hexint & 0xFF0000) >> 16))/255
+    green:((CGFloat) ((hexint & 0xFF00) >> 8))/255
+    blue:((CGFloat) (hexint & 0xFF))/255
+    alpha:alpha];
+
+  return color;
+}
+
+@end
+
 @implementation RNRegulaDocumentReader
 
 @synthesize bridge = _bridge;
@@ -72,6 +106,12 @@ RCT_EXPORT_METHOD(prepareDatabase:(NSDictionary*) options callback:(RCTResponseS
 //    }];
 //}
 
+#define UIColorFromHEX(hex) \
+[UIColor colorWithRed:((float)((hex & 0xFF0000) >> 16))/255.0 \
+                green:((float)((hex & 0x00FF00) >>  8))/255.0 \
+                 blue:((float)((hex & 0x0000FF) >>  0))/255.0 \
+                alpha:1.0]
+
 RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
 {
     __block RCTResponseSenderBlock callback = cb;
@@ -91,8 +131,15 @@ RCT_EXPORT_METHOD(scan:(NSDictionary*)opts callback:(RCTResponseSenderBlock)cb)
         [RGLDocReader.shared.processParams setValuesForKeysWithDictionary:opts[@"processParams"]];
         [RGLDocReader.shared.customization setValuesForKeysWithDictionary:opts[@"customization"]];
         [RGLDocReader.shared.functionality setValuesForKeysWithDictionary:opts[@"functionality"]];
+
         if ([opts[@"customization"][@"cameraFrameShapeType"] isEqualToString:@"corners"])
             [RGLDocReader shared].customization.cameraFrameShapeType = RGLCameraFrameShapeTypeCorners;
+
+        if ([opts[@"customization"][@"cameraFrameDefaultColor"] length] != 0)
+            [RGLDocReader shared].customization.cameraFrameDefaultColor = [UIColor colorwithHexString:opts[@"customization"][@"cameraFrameDefaultColor"] alpha:1.0];
+
+        if ([opts[@"customization"][@"cameraFrameActiveColor"] length] != 0)
+            [RGLDocReader shared].customization.cameraFrameActiveColor = [UIColor colorwithHexString:opts[@"customization"][@"cameraFrameActiveColor"] alpha:1.0];
 
         [RGLDocReader.shared showScanner:currentViewController completion:^(enum RGLDocReaderAction action, RGLDocumentReaderResults * _Nullable result, NSString * _Nullable error) {
             NSLog(@"DocumentReaderAction %ld", (long)action);
